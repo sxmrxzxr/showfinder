@@ -34,7 +34,7 @@ class Show {
 function buildGETurl(lat, long) {
     //alert(lat.toFixed(4));
     //alert(long.toFixed(4));
-    return "https://api.seatgeek.com/2/events?lat=" + lat.toFixed(4) + "&lon=" + long.toFixed(4) + "&range=25mi";
+    return "https://api.seatgeek.com/2/events?lat=" + lat.toFixed(4) + "&lon=" + long.toFixed(4) + "&range=15mi";
 }
 
 function JSONtoShow(x) {
@@ -65,13 +65,21 @@ function addInfoWindow(marker, message) {
 }
 
 function getLocation(lat, long) {
-    var philadelphia = new google.maps.LatLng(lat, long)
+    var me = new google.maps.LatLng(lat, long)
 
     var map = new google.maps.Map(document.getElementById("map"), {
-        center: philadelphia,
-        zoom: 12,
+        center: me,
+        zoom: 13,
         scrollwheel: false
     });
+    
+    var myTitle = document.createElement("h1");
+    myTitle.style.color = "blue"
+    myTitle.innerHTML = "Showfinder";
+    var myTextDiv = document.createElement('div');
+    myTextDiv.appendChild(myTitle);
+    
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(myTextDiv);
 
     var results = buildGETurl(lat, long);
     var mydump = httpGet(results);
