@@ -5,7 +5,7 @@
  */
 
 class Show {
-    
+
     constructor(_id, _title, _datetime, _venueName, _venueLat, _venueLng, _url) {
         this._id = _id;
         this._title = _title;
@@ -15,21 +15,30 @@ class Show {
         this._venueLng = _venueLng;
         this._url = _url;
     }
-    
+
     toReadableDate() {
         var d = new Date();
     }
 
     toString() {
         return "<div id='content'>" +
-               "<div id='siteNotice'>" +
-               "</div>" +
-               "<h3 id='firstHeading' class='firstHeading'>" + this._title + "</h1>" +
-               "<p><b>" + this._venueName + "</b> on " + this._datetime + "</p>" + 
-               "<p>Link: <a href=" + this._url + ">"+this._url+"</a></p>";
+            "<div id='siteNotice'>" +
+            "</div>" +
+            "<h3 id='firstHeading' class='firstHeading'>" + this._title + "</h1>" +
+            "<p><b>" + this._venueName + "</b> on " + this._datetime + "</p>" +
+            "<p>Link: <a href=" + this._url + ">" + this._url + "</a></p>";
     }
 
 }
+
+var philly = {
+    lat: 39.9526,
+    lon: -75.1652
+};
+var nyc = {
+    lat: 40.7128,
+    lon: -74.0059
+};
 
 function buildGETurl(lat, long) {
     //alert(lat.toFixed(4));
@@ -58,40 +67,24 @@ function addInfoWindow(marker, message) {
     var infoWindow = new google.maps.InfoWindow({
         content: message
     });
-    
-    google.maps.event.addListener(marker, "click", function() {
+
+    google.maps.event.addListener(marker, "click", function () {
         infoWindow.open(map, marker);
     })
 }
 
-function getLocation(lat, long) {
-    var me = new google.maps.LatLng(lat, long)
-
-    var map = new google.maps.Map(document.getElementById("map"), {
-        center: me,
-        zoom: 13,
-        scrollwheel: false
-    });
-    
-    var myTitle = document.createElement("h1");
-    myTitle.style.color = "blue"
-    myTitle.innerHTML = "Showfinder";
-    var myTextDiv = document.createElement('div');
-    myTextDiv.appendChild(myTitle);
-    
-    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(myTextDiv);
-
+function generateMarkers(lat, long, map) {
     var results = buildGETurl(lat, long);
     var mydump = httpGet(results);
-    
+
     console.log(mydump);
     var toShows = JSONtoShow(JSON.parse(mydump));
     console.log(toShows);
 
-    var infowindow = new google.maps.InfoWindow( function (contentString) {
+    var infowindow = new google.maps.InfoWindow(function (contentString) {
         content: contentString
     });
-    
+
     for (var i in toShows) {
         console.log(i.toString());
         var marker = new google.maps.Marker({
@@ -102,8 +95,33 @@ function getLocation(lat, long) {
                 lng: toShows[i]._venueLng
             }
         });
-        addInfoWindow(marker, toShows[i].toString());        
+        addInfoWindow(marker, toShows[i].toString());
     }
+}
+
+function getLocation(lat, long) {
+    var me = new google.maps.LatLng(lat, long)
+
+    var map = new google.maps.Map(document.getElementById("map"), {
+        center: me,
+        zoom: 13,
+        scrollwheel: false
+    });
+
+    var myTitle = document.createElement("h1");
+    myTitle.style.color = "blue"
+    myTitle.innerHTML = "Seatfinder";
+    var myTextDiv = document.createElement('div');
+    myTextDiv.appendChild(myTitle);
+
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(myTextDiv);
+    generateMarkers(lat, long, map);
+    
+    var centerPhillyDiv = document.createElement('div');
+    var centerPhilly = new CenterPhilly(centerPhillyDiv, map);
+
+    centerPhillyDiv.index = 1;
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerPhillyDiv);
 }
 
 function initMap() {
@@ -114,4 +132,35 @@ function initMap() {
     } else {
         getLocation(40, 90);
     }
+}
+
+function CenterPhilly(controlDiv, map) {
+    var controlUI = document.createElement('div');
+    controlUI.style.backgroundColor = '#fff';
+    controlUI.style.border = '2px solid #fff';
+    controlUI.style.borderRadius = '3px';
+    controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+    controlUI.style.cursor = 'pointer';
+    controlUI.style.marginBottom = '22px';
+    controlUI.style.textAlign = 'center';
+    controlUI.title = 'Click to center on Philadelphia';
+    controlDiv.appendChild(controlUI);
+
+    // Set CSS for the control interior.
+    var controlText = document.createElement('div');
+    controlText.style.color = 'rgb(25,25,25)';
+    controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+    controlText.style.fontSize = '16px';
+    controlText.style.lineHeight = '38px';
+    controlText.style.paddingLeft = '5px';
+    controlText.style.paddingRight = '5px';
+    controlText.innerHTML = 'To Philly';
+    controlUI.appendChild(controlText);
+
+    // Setup the click event listeners: simply set the map to Chicago.
+    controlUI.addEventListener('click', function () {
+        map.setCenter(philly);
+        getLocation(philly.lat, philly.lon);
+    });
+
 }
