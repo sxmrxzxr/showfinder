@@ -15,25 +15,20 @@ class Show {
         this._venueLng = _venueLng;
         this._url = _url;
     }
+    
+    toReadableDate() {
+        var d = new Date();
+    }
 
     toString() {
         return "<div id='content'>" +
                "<div id='siteNotice'>" +
                "</div>" +
                "<h3 id='firstHeading' class='firstHeading'>" + this._title + "</h1>" +
-               "<p><b>" + this._venueName + "</b> on " + this._datetime + "</p>" + "<p>Link: <a href=" + this._url + ">"+this._url+"</a></p>";
+               "<p><b>" + this._venueName + "</b> on " + this._datetime + "</p>" + 
+               "<p>Link: <a href=" + this._url + ">"+this._url+"</a></p>";
     }
 
-}
-
-function initMap() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            getLocation(position.coords.latitude, position.coords.longitude);
-        });
-    } else {
-        getLocation(40, 90);
-    }
 }
 
 function buildGETurl(lat, long) {
@@ -74,7 +69,7 @@ function getLocation(lat, long) {
 
     var map = new google.maps.Map(document.getElementById("map"), {
         center: philadelphia,
-        zoom: 15,
+        zoom: 12,
         scrollwheel: false
     });
 
@@ -100,5 +95,15 @@ function getLocation(lat, long) {
             }
         });
         addInfoWindow(marker, toShows[i].toString());        
+    }
+}
+
+function initMap() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            getLocation(position.coords.latitude, position.coords.longitude);
+        });
+    } else {
+        getLocation(40, 90);
     }
 }
