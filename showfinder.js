@@ -110,18 +110,30 @@ function getLocation(lat, long) {
 
     var myTitle = document.createElement("h1");
     myTitle.style.color = "blue"
-    myTitle.innerHTML = "Seatfinder";
+    myTitle.innerHTML = "Showfinder";
     var myTextDiv = document.createElement('div');
     myTextDiv.appendChild(myTitle);
 
-    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(myTextDiv);
+    map.controls[google.maps.ControlPosition.BOTTOM_RIGHT].push(myTextDiv);
     generateMarkers(lat, long, map);
     
     var centerPhillyDiv = document.createElement('div');
     var centerPhilly = new CenterPhilly(centerPhillyDiv, map);
 
     centerPhillyDiv.index = 1;
-    map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerPhillyDiv);
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(centerPhillyDiv);
+    
+    var centerNYCDiv = document.createElement("div");
+    var centerNYC = new CenterNYC(centerNYCDiv, map);
+    
+    centerNYCDiv.index = 2;
+    map.controls[google.maps.ControlPosition.RIGHT_TOP].push(centerNYCDiv);
+    
+    var centerHomeDiv = document.createElement("div");
+    var centerHome = new CenterHome(centerHomeDiv, map);
+    
+    centerHomeDiv.index = 2;
+    map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerHomeDiv);
 }
 
 function initMap() {
@@ -162,5 +174,66 @@ function CenterPhilly(controlDiv, map) {
         map.setCenter(philly);
         getLocation(philly.lat, philly.lon);
     });
-
 }
+
+function CenterNYC(controlDiv, map) {
+    var controlUI = document.createElement('div');
+    controlUI.style.backgroundColor = '#fff';
+    controlUI.style.border = '2px solid #fff';
+    controlUI.style.borderRadius = '3px';
+    controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+    controlUI.style.cursor = 'pointer';
+    controlUI.style.marginBottom = '22px';
+    controlUI.style.textAlign = 'center';
+    controlUI.title = 'Click to center on New York City';
+    controlDiv.appendChild(controlUI);
+
+    // Set CSS for the control interior.
+    var controlText = document.createElement('div');
+    controlText.style.color = 'rgb(25,25,25)';
+    controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+    controlText.style.fontSize = '16px';
+    controlText.style.lineHeight = '38px';
+    controlText.style.paddingLeft = '5px';
+    controlText.style.paddingRight = '5px';
+    controlText.innerHTML = 'To NYC';
+    controlUI.appendChild(controlText);
+
+    // Setup the click event listeners: simply set the map to Chicago.
+    controlUI.addEventListener('click', function () {
+        map.setCenter(nyc);
+        getLocation(nyc.lat, nyc.lon);
+    });
+}
+
+function CenterHome(controlDiv, map) {
+    var controlUI = document.createElement('div');
+    controlUI.style.backgroundColor = '#fff';
+    controlUI.style.border = '2px solid #fff';
+    controlUI.style.borderRadius = '3px';
+    controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+    controlUI.style.cursor = 'pointer';
+    controlUI.style.marginBottom = '22px';
+    controlUI.style.textAlign = 'center';
+    controlUI.title = 'Click to center on your location.';
+    controlDiv.appendChild(controlUI);
+
+    // Set CSS for the control interior.
+    var controlText = document.createElement('div');
+    controlText.style.color = 'rgb(25,25,25)';
+    controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+    controlText.style.fontSize = '16px';
+    controlText.style.lineHeight = '38px';
+    controlText.style.paddingLeft = '5px';
+    controlText.style.paddingRight = '5px';
+    controlText.innerHTML = 'Home';
+    controlUI.appendChild(controlText);
+
+    // Setup the click event listeners: simply set the map to Chicago.
+    controlUI.addEventListener('click', function () {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            getLocation(position.coords.latitude, position.coords.longitude);
+        });
+    });
+}
+
