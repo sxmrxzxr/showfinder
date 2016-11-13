@@ -26,9 +26,8 @@ class Show {
             "</div>" +
             "<h3 id='firstHeading' class='firstHeading'>" + this._title + "</h1>" +
             "<p><b>" + this._venueName + "</b> on " + this._datetime + "</p>" +
-            "<p>Link: <a href=" + this._url + ">" + this._url + "</a></p>";
+            "<form action=" + this._url + "> <input type='submit' value='View Tickets On SeatGeek'/></form>";
     }
-
 }
 
 var philly = {
