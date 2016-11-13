@@ -17,7 +17,11 @@ class Show {
     }
 
     toString() {
-        return this._title + "\r\n" + this._datetime + "\r\n" + this._venueName + "\r\n" + this._url;
+        return "<div id='content'>" +
+               "<div id='siteNotice'>" +
+               "</div>" +
+               "<h3 id='firstHeading' class='firstHeading'>" + this._title + "</h1>" +
+               "<p><b>" + this._venueName + "</b> on " + this._datetime + "</p>" + "<p>Link: <a href=" + this._url + ">"+this._url+"</a></p>";
     }
 
 }
@@ -33,9 +37,9 @@ function initMap() {
 }
 
 function buildGETurl(lat, long) {
-    alert(lat.toFixed(4));
-    alert(long.toFixed(4));
-    return "https://api.seatgeek.com/2/events?lat=" + lat.toFixed(4) + "&lon=" + long.toFixed(4) + "&range=15mi";
+    //alert(lat.toFixed(4));
+    //alert(long.toFixed(4));
+    return "https://api.seatgeek.com/2/events?lat=" + lat.toFixed(4) + "&lon=" + long.toFixed(4) + "&range=25mi";
 }
 
 function JSONtoShow(x) {
@@ -43,7 +47,7 @@ function JSONtoShow(x) {
     for (var i in x.events) {
         console.log(x.events[i])
         var q = x.events[i];
-        y.push(new Show(q.id, q.title, q.datetime_local, q.venue[1], q.venue.location.lat, q.venue.location.lon, q.url));
+        y.push(new Show(q.id, q.title, q.datetime_local, q.venue.name, q.venue.location.lat, q.venue.location.lon, q.url));
     }
     return y;
 }
