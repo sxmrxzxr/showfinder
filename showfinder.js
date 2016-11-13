@@ -26,7 +26,7 @@ class Show {
             "</div>" +
             "<h3 id='firstHeading' class='firstHeading'>" + this._title + "</h1>" +
             "<p><b>" + this._venueName + "</b> on " + this._datetime + "</p>" +
-            "<form action=" + this._url + "> <input type='submit' value='View Tickets On SeatGeek'/></form>";
+            "<form action=" + this._url + " target=_blank > <input type='submit' value='View Tickets On SeatGeek'/></form>";
     }
 }
 
