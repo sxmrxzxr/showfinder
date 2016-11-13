@@ -104,7 +104,8 @@ function getLocation(lat, long) {
     var map = new google.maps.Map(document.getElementById("map"), {
         center: me,
         zoom: 13,
-        scrollwheel: false
+        scrollwheel: false,
+        disableDefaultUI: true
     });
 
     var myTitle = document.createElement("h1");
