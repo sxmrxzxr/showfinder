@@ -2,6 +2,9 @@
   <content>
 # Showfinder
 
+https://sxmrxzxr.github.io/showfinder
+https://devpost.com/software/showfinder-yzwocr
+
 Web app that finds the user's location and displays upcoming events on a map. Data pulled from SeatGeek's platform, displayed with Google Maps API, hacked at Hack Princeton.
 
 ## Usage
